@@ -1,0 +1,32 @@
+{
+    "name": "Denis Brogniard shout Ah!",
+    "version": "0.0.0.1",
+    "manifest_version": 3,
+    "description": "An extention shouting Ah when the mouse hover the word Ah",
+    "icons": {
+        "16": "icons/ah16x16.png",
+        "32": "icons/ah32x32.png",
+        "48": "icons/ah48x48.png",
+        "128": "icons/ah128x128.png"
+    },
+    "action": {},
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "declarativeContent"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "css": [
+                "ah.css"
+            ],
+            "js": [
+                "ah.js"
+            ]
+        }
+    ]
+}
