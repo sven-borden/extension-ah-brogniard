@@ -11,22 +11,18 @@
     },
     "action": {},
     "permissions": [
-        "activeTab",
-        "scripting",
-        "declarativeContent"
+        "tabs",
+        "<all_urls>"
     ],
-    "content_scripts": [
-        {
-            "matches": [
-                "http://*/*",
-                "https://*/*"
-            ],
-            "css": [
-                "ah.css"
-            ],
-            "js": [
-                "ah.js"
-            ]
-        }
-    ]
+    "content_scripts": [{
+        "matches": [
+            "http://*/*",
+            "https://*/*"
+        ],
+        "js": [
+            "replacetxt.js"
+        ],
+        "run_at": "document_end",
+        "all_frames": true
+    }]
 }
