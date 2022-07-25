@@ -22,44 +22,35 @@ function func1() {
 alert('the');
 }
 
-function replacer(node, parent) { 
-    var r = /the/g;
-    var result = r.exec(node.nodeValue);
-    if(!result) { return; }
+function traverse(elm) {
+if (elm.nodeType == Node.ELEMENT_NODE || elm.nodeType == Node.DOCUMENT_NODE) {
 
-    var newNode = this.createElement('span');
+    // exclude elements with invisible text nodes
+    if (isExcluded(elm)) {
+    return
+    }
 
-    newNode.innerHTML = node
-        .nodeValue
-        .replace(r, '<span class="replaced">$&</span>');
+    for (var i=0; i < elm.childNodes.length; i++) {
+    // recursively call to traverse
+    traverse(elm.childNodes[i]);
+    }
 
-    parent.replaceChild(newNode, node);
 }
 
-function traverse(elm) {
-    if (elm.nodeType == Node.ELEMENT_NODE || elm.nodeType == Node.DOCUMENT_NODE) {
+if (elm.nodeType == Node.TEXT_NODE) {
 
-        // exclude elements with invisible text nodes
-        if (isExcluded(elm)) {
-        return
-        }
-
-        for (var i=0; i < elm.childNodes.length; i++) {
-        // recursively call to traverse
-        traverse(elm.childNodes[i]);
-        }
-
+    // exclude text node consisting of only spaces
+    if (elm.nodeValue.trim() == "") {
+    return
     }
 
-    if (elm.nodeType == Node.TEXT_NODE) {
-
-        // exclude text node consisting of only spaces
-        if (elm.nodeValue.trim() == "") {
-        return
-        }
-
-        updateText(elm, elm.parentElement);
-    }
+    // elm.nodeValue here is visible text we need.
+    // elm.nodeValue = elm.nodeValue.replace(/\b(the)\b/g, '<span onmouseover="func1()">$1</span>');
+    // elm.nodeValue = elm.nodeValue.replace(/\b(the)\b/g, '<span onmouseover="func1()">$&</span>');
+    v = elm.innerHTML;
+    v = v.replace(/\b(the)\b/g, '<span onmouseover="func1()">$&</span>');
+    elm.innerHTML = v;
+}
 }
 
 traverse(document);
