@@ -11,8 +11,7 @@
     },
     "action": {},
     "permissions": [
-        "tabs",
-        "<all_urls>"
+        "activeTab"
     ],
     "content_scripts": [{
         "matches": [
