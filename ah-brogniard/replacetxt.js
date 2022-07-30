@@ -1,72 +1,36 @@
-function isExcluded(elm) {
-    if (elm.tagName == "STYLE") {
-      return true;
-    }
-    if (elm.tagName == "SCRIPT") {
-      return true;
-    }
-    if (elm.tagName == "NOSCRIPT") {
-      return true;
-    }
-    if (elm.tagName == "IFRAME") {
-      return true;
-    }
-    if (elm.tagName == "OBJECT") {
-      return true;
-    }
-    return false
-}
 
-function func1() {
+function shoutAh() {
     console.log("ahhhhh");
-alert('the');
+    alert('the');
 }
 
-function traverse(elm) {
-if (elm.nodeType == Node.ELEMENT_NODE || elm.nodeType == Node.DOCUMENT_NODE) {
+function walk(node) {
 
-    // exclude elements with invisible text nodes
-    if (isExcluded(elm)) {
-    return
-    }
+  var child, next;
+  switch (node.nodeType) {
 
-    for (var i=0; i < elm.childNodes.length; i++) {
-    // recursively call to traverse
-    traverse(elm.childNodes[i]);
-    }
+    case 1:
+      handleText(node);
+      break;
+    case 9:
+    case 11:
+      child = node.firstChild;
+      while (child) {
+        next = child.nextSibling;
+        walk(child);
+        child = next;
+      }
+      break;
 
+    case 3:
+      break;
+  }
 }
 
-if (elm.nodeType == Node.TEXT_NODE) {
-
-    // exclude text node consisting of only spaces
-    if (elm.nodeValue.trim() == "") {
-    return
-    }
-
-    // elm.nodeValue here is visible text we need.
-    // elm.nodeValue = elm.nodeValue.replace(/\b(the)\b/g, '<span onmouseover="func1()">$1</span>');
-    // elm.nodeValue = elm.nodeValue.replace(/\b(the)\b/g, '<span onmouseover="func1()">$&</span>');
-    v = elm.innerHTML;
-    v = v.replace(/\b(the)\b/g, '<span onmouseover="func1()">$&</span>');
-    elm.innerHTML = v;
-}
+function handleText(node) {
+  var v = node.innerHTML;
+  v = v.replace(/the/gi, '<span onmouseover="alert("the")">$&</span>');
+  node.innerHTML = v;
 }
 
-traverse(document);
-// Options for the observer (which mutations to observe)
-const config = { attributes: true, childList: true, subtree: true };
-
-// Callback function to execute when mutations are observed
-const callback = function(mutationsList, observer) {
-    // Use traditional 'for loops' for IE 11
-    for(const mutation of mutationsList) {
-        traverse(mutation.target);
-    }
-}
-
-// Create an observer instance linked to the callback function
-const observer = new MutationObserver(callback);
-
-// Start observing the target node for configured mutations
-observer.observe(document, config);
+walk(document.body);
